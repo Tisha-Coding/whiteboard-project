@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background: #faf5ff;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ════════ FLOATING SHAPES ════════ */
+@keyframes shape-float-1 {
+  0%,100% { transform: translate(0,0) rotate(0deg) scale(1); }
+  40%      { transform: translate(30px,-50px) rotate(15deg) scale(1.08); }
+  70%      { transform: translate(-20px,30px) rotate(-8deg) scale(0.94); }
+}
+@keyframes shape-float-2 {
+  0%,100% { transform: translate(0,0) rotate(0deg) scale(1); }
+  35%      { transform: translate(-40px,35px) rotate(-20deg) scale(1.1); }
+  70%      { transform: translate(50px,-25px) rotate(10deg) scale(0.9); }
+}
+@keyframes shape-float-3 {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  50%      { transform: translate(25px,40px) rotate(25deg); }
+}
+@keyframes shape-float-4 {
+  0%,100% { transform: translate(0,0) scale(1) rotate(0deg); }
+  60%      { transform: translate(-30px,-20px) scale(1.06) rotate(-15deg); }
+}
+.sf1 { animation: shape-float-1 14s ease-in-out infinite; }
+.sf2 { animation: shape-float-2 18s ease-in-out infinite; }
+.sf3 { animation: shape-float-3 11s ease-in-out infinite; }
+.sf4 { animation: shape-float-4 16s ease-in-out infinite; }
+
+/* ════════ PAGE ENTER ════════ */
+@keyframes pageIn {
+  from { opacity:0; transform:translateY(36px) scale(0.96); }
+  to   { opacity:1; transform:translateY(0)    scale(1);    }
+}
+.page-enter { animation: pageIn 0.65s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* ════════ SHIMMER TEXT ════════ */
+@keyframes shimmer-text {
+  from { background-position: 0%   center; }
+  to   { background-position: 200% center; }
+}
+.g-text {
+  background: linear-gradient(120deg,#6d28d9 0%,#9333ea 30%,#c026d3 60%,#7c3aed 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-text 4s linear infinite;
+}
+
+/* ════════ SPINNING BORDER ════════ */
+@keyframes spin-border { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.spin-border { animation: spin-border 6s linear infinite; }
+
+/* ════════ CHARACTER ════════ */
+@keyframes char-bob  { 0%,100%{transform:translateY(0)}    50%{transform:translateY(-10px)} }
+@keyframes arm-wave  { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-38deg)} 75%{transform:rotate(18deg)} }
+@keyframes arm-draw  { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(18deg)} }
+@keyframes eye-blink { 0%,88%,100%{transform:scaleY(1)} 92%,96%{transform:scaleY(0.07)} }
+@keyframes draw-line  { 0%{stroke-dashoffset:120} 70%,100%{stroke-dashoffset:0} }
+@keyframes draw-line2 { 0%,30%{stroke-dashoffset:80}  90%,100%{stroke-dashoffset:0} }
+@keyframes draw-line3 { 0%,55%{stroke-dashoffset:50}  100%{stroke-dashoffset:0} }
+@keyframes sp-float  { 0%,100%{transform:translateY(0) rotate(0deg);opacity:.8} 50%{transform:translateY(-14px) rotate(15deg);opacity:1} }
+@keyframes sp-float2 { 0%,100%{transform:translateY(0) rotate(0deg);opacity:.6} 50%{transform:translateY(-10px) rotate(-10deg);opacity:1} }
+@keyframes badge-float { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-6px) rotate(2deg)} }
+
+/* ════════ MODE CARD ════════ */
+.mode-card {
+  position: relative; overflow: hidden;
+  transform-style: preserve-3d;
+  transition: box-shadow .25s ease, border-color .2s, background .22s, opacity .2s;
+  will-change: transform;
+}
+@keyframes sweep {
+  from { transform:translateX(-130%) skewX(-18deg); }
+  to   { transform:translateX(230%)  skewX(-18deg); }
+}
+.mode-card::before {
+  content:''; position:absolute; inset:0; z-index:2;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,0.55) 50%,transparent 65%);
+  transform:translateX(-130%) skewX(-18deg);
+  pointer-events:none; border-radius:inherit;
+}
+.mode-card:hover::before { animation:sweep .65s ease forwards; }
+
+/* ════════ INPUT ════════ */
+.room-input { transition:border-color .2s,box-shadow .25s,background .2s; }
+.room-input:focus {
+  outline:none;
+  border-color:rgba(124,58,237,0.7) !important;
+  background:#fff !important;
+  box-shadow:0 0 0 4px rgba(124,58,237,0.12), 0 0 20px rgba(124,58,237,0.08);
+}
+.room-input::placeholder { color:rgba(124,58,237,0.3); }
+
+/* ════════ CHIP ════════ */
+.chip { transition:all .18s ease; }
+.chip:hover {
+  transform:translateY(-2px) scale(1.05);
+  background:#ede9fe !important;
+  border-color:rgba(124,58,237,0.5) !important;
+  color:#6d28d9 !important;
+  box-shadow:0 4px 14px rgba(124,58,237,0.18);
+}
+
+/* ════════ PULSE DOT ════════ */
+@keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(1.9)} }
+.live-dot { animation:pdot 2s ease-in-out infinite; }
