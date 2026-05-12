@@ -1,21 +1,14 @@
 import { useState } from 'react'
-import { Tldraw } from 'tldraw'
+import { Excalidraw } from '@excalidraw/excalidraw'
 import { Link } from 'react-router-dom'
-import 'tldraw/tldraw.css'
-
-const INITIAL_KEY = 'local-whiteboard'
 
 const TestComp = () => {
-  const [persistenceKey, setPersistenceKey] = useState(INITIAL_KEY)
+  const [resetKey, setResetKey] = useState(0)
   const [resetHover, setResetHover] = useState(false)
   const [homeHover, setHomeHover] = useState(false)
 
   const handleReset = () => {
-    try {
-      localStorage.removeItem(persistenceKey)
-      localStorage.removeItem(`${persistenceKey}-index`)
-    } catch (_) {}
-    setPersistenceKey(`local-${Date.now()}`)
+    setResetKey(prev => prev + 1)
   }
 
   return (
@@ -104,7 +97,9 @@ const TestComp = () => {
         </div>
       </div>
 
-      <Tldraw persistenceKey={persistenceKey} />
+      <div style={{ position: 'absolute', inset: 0 }} key={resetKey}>
+        <Excalidraw />
+      </div>
     </div>
   )
 }

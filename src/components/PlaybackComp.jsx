@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Tldraw, loadSnapshot } from 'tldraw'
-import 'tldraw/tldraw.css'
+import { Excalidraw } from '@excalidraw/excalidraw'
 import { listCheckpoints } from '../utils/whiteboardService'
 
 const PB_LOCK_KEY = 'pb_locked_room'
@@ -135,17 +134,6 @@ const PlaybackComp = () => {
     return () => { cancelled = true }
   }, [isRoomIdValid, roomIdValue])
 
-  useEffect(() => {
-    if (!editorReady || !editorRef.current || !currentCheckpoint) return
-    if (loadTimerRef.current) clearTimeout(loadTimerRef.current)
-    loadTimerRef.current = setTimeout(() => {
-      const parsed = coerceJson(currentCheckpoint.json)
-      if (!parsed) return
-      try { loadSnapshot(editorRef.current.store, parsed) }
-      catch (e) { console.error('Playback snapshot load error:', e) }
-    }, DEBOUNCE_MS)
-    return () => { if (loadTimerRef.current) clearTimeout(loadTimerRef.current) }
-  }, [currentCheckpoint, editorReady])
 
   useEffect(() => {
     if (!isPlaying || checkpoints.length <= 1) return
@@ -291,15 +279,17 @@ const PlaybackComp = () => {
         </div>
       </div>
 
-      <Tldraw
-        components={{}}
-        onMount={(editor) => {
-          editorRef.current = editor
-          setEditorReady(true)
-          try { editor.updateInstanceState({ isReadonly: true }) }
-          catch (e) { console.warn('Could not set readonly mode:', e) }
-        }}
-      />
+      <div style={{ position: 'absolute', inset: 0 }}>
+        <Excalidraw
+          onMount={() => {
+            setEditorReady(true)
+          }}
+          readOnly={true}
+          initialData={{
+            elements: currentCheckpoint?.json?.elements || []
+          }}
+        />
+      </div>
 
       {/* ── Dark cinematic player bar ── */}
       <div style={{

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getSnapshot, Tldraw, loadSnapshot } from "tldraw";
-import "tldraw/tldraw.css";
+import { Excalidraw } from "@excalidraw/excalidraw";
 import {
   insertCheckpoint as insertCheckpointService,
   loadLatestWhiteboardSnapshot,
@@ -233,12 +232,12 @@ const CollabComp = () => {
   }, []);
 
   const insertCheckpoint = useCallback(
-    async (editor, title, { silent } = { silent: true }) => {
-      if (!roomIdValue || !editor || isCheckpointingRef.current) return;
+    async (elements, title, { silent } = { silent: true }) => {
+      if (!roomIdValue || isCheckpointingRef.current) return;
       isCheckpointingRef.current = true;
       if (!silent) setIsSavingCheckpoint(true);
       try {
-        const snapshot = getSnapshot(editor.store);
+        const snapshot = { elements };
         await insertCheckpointService(roomIdValue, snapshot, title);
         setLastCheckpointAt(new Date().toISOString());
         if (!silent) showStatus("success", "Checkpoint saved.");
@@ -253,13 +252,12 @@ const CollabComp = () => {
     [roomIdValue, showStatus]
   );
 
-  const loadData = useCallback(async (editor) => {
+  const loadData = useCallback(async () => {
     if (!roomIdValue) return;
     setIsLoadingBoard(true);
     try {
       const snapshot = await loadLatestWhiteboardSnapshot(roomIdValue);
       if (snapshot) {
-        loadSnapshot(editor.store, snapshot);
         lastSnapshotHashRef.current = JSON.stringify(snapshot).length;
       }
     } catch (e) {
@@ -271,12 +269,12 @@ const CollabComp = () => {
   }, [roomIdValue, showStatus]);
 
   const handleSave = useCallback(async () => {
-    const editor = editorRef.current;
+    const excalidrawElements = editorRef.current;
     if (!roomIdValue) return;
-    if (!editor) return showStatus("error", "Editor not ready yet.");
+    if (!excalidrawElements) return showStatus("error", "Editor not ready yet.");
     setIsSavingLatest(true);
     try {
-      const snapshot = getSnapshot(editor.store);
+      const snapshot = { elements: excalidrawElements };
       await saveLatestWhiteboardSnapshot(roomIdValue, snapshot);
       showStatus("success", "Board saved.");
     } catch (e) {
@@ -318,27 +316,8 @@ const CollabComp = () => {
 
   useEffect(() => {
     if (!isRoomIdValid || !editorReady) return;
-    if (checkpointTimerRef.current) return;
-
-    const tick = () => {
-      const editor = editorRef.current;
-      if (!editor) return;
-      const snapshot = getSnapshot(editor.store);
-      const currentHash = JSON.stringify(snapshot).length;
-      if (currentHash === lastSnapshotHashRef.current) return;
-      lastSnapshotHashRef.current = currentHash;
-      insertCheckpoint(editor, buildAutoCheckpointTitle(), { silent: true });
-    };
-
-    const initialTimer = setTimeout(tick, 2500);
-    checkpointTimerRef.current = setInterval(tick, CHECKPOINT_EVERY_MS);
-
-    return () => {
-      clearTimeout(initialTimer);
-      if (checkpointTimerRef.current) clearInterval(checkpointTimerRef.current);
-      checkpointTimerRef.current = null;
-    };
-  }, [buildAutoCheckpointTitle, editorReady, insertCheckpoint, isRoomIdValid]);
+    loadData();
+  }, [isRoomIdValid, editorReady, loadData]);
 
   if (!isRoomIdValid) {
     return (
@@ -449,13 +428,14 @@ const CollabComp = () => {
         </div>
       ) : null}
 
-      <Tldraw
-        onMount={(editor) => {
-          editorRef.current = editor;
-          setEditorReady(true);
-          loadData(editor);
-        }}
-      />
+      <div style={{ position: 'absolute', inset: 0 }}>
+        <Excalidraw
+          onChange={(elements) => {
+            editorRef.current = elements;
+            if (!editorReady) setEditorReady(true);
+          }}
+        />
+      </div>
 
       <div style={{ position: "absolute", top: 60, left: 14, zIndex: 20, pointerEvents: "none" }}>
         <div style={{ pointerEvents: "auto" }}>

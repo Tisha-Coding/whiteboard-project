@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Tldraw } from 'tldraw'
-import 'tldraw/tldraw.css'
-import { useSyncDemo } from '@tldraw/sync'
+import { Excalidraw } from '@excalidraw/excalidraw'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const RT_LOCK_KEY = 'rt_locked_room'
@@ -9,7 +7,6 @@ const RT_LOCK_KEY = 'rt_locked_room'
 const RealTimeComp = () => {
   const { roomId } = useParams()
   const roomIdValue = (roomId || '').trim()
-  const store = useSyncDemo({ roomId: roomIdValue })
   const [copyStatus, setCopyStatus] = useState(null)
   const [homeHover, setHomeHover] = useState(false)
   const [copyHover, setCopyHover] = useState(false)
@@ -17,7 +14,6 @@ const RealTimeComp = () => {
   const mountedRoomId = useRef(roomIdValue)
   const navigate = useNavigate()
 
-  // sessionStorage-based lock — survives remounts caused by URL bar edits
   useEffect(() => {
     const id = mountedRoomId.current
     const stored = sessionStorage.getItem(RT_LOCK_KEY)
@@ -44,11 +40,6 @@ const RealTimeComp = () => {
       setCopyStatus({ type: 'error', message: 'Copy failed.' })
     }
     setTimeout(() => setCopyStatus(null), 3000)
-  }
-
-  const handleMount = (editor) => {
-    const name = sessionStorage.getItem('rt_user_name') || 'Anonymous'
-    editor.user.updateUserPreferences({ name })
   }
 
   return (
@@ -141,7 +132,9 @@ const RealTimeComp = () => {
         </div>
       </div>
 
-      <Tldraw store={store} onMount={handleMount} />
+      <div style={{ position: 'absolute', inset: 0 }}>
+        <Excalidraw />
+      </div>
     </div>
   )
 }
