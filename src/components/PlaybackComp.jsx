@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Excalidraw } from '@excalidraw/excalidraw'
+import CanvasWhiteboard from './CanvasWhiteboard'
 import { listCheckpoints } from '../utils/whiteboardService'
 
 const PB_LOCK_KEY = 'pb_locked_room'
@@ -279,19 +279,10 @@ const PlaybackComp = () => {
         </div>
       </div>
 
-      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-        <Excalidraw
-          width="100%"
-          height="100%"
-          onMount={() => {
-            setEditorReady(true)
-          }}
-          readOnly={true}
-          initialData={{
-            elements: currentCheckpoint?.json?.elements || []
-          }}
-        />
-      </div>
+      <CanvasWhiteboard
+        readOnly={true}
+        initialData={currentCheckpoint?.json}
+      />
 
       {/* ── Dark cinematic player bar ── */}
       <div style={{

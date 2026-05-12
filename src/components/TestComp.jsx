@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Excalidraw } from '@excalidraw/excalidraw'
 import { Link } from 'react-router-dom'
+import CanvasWhiteboard from './CanvasWhiteboard'
 
 const TestComp = () => {
   const [resetKey, setResetKey] = useState(0)
@@ -97,12 +97,7 @@ const TestComp = () => {
         </div>
       </div>
 
-      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} key={resetKey}>
-        <Excalidraw
-          width="100%"
-          height="100%"
-        />
-      </div>
+      <CanvasWhiteboard key={resetKey} />
     </div>
   )
 }

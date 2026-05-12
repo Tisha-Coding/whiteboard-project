@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Excalidraw } from "@excalidraw/excalidraw";
+import CanvasWhiteboard from "./CanvasWhiteboard";
 import {
   insertCheckpoint as insertCheckpointService,
   loadLatestWhiteboardSnapshot,
@@ -428,16 +428,12 @@ const CollabComp = () => {
         </div>
       ) : null}
 
-      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-        <Excalidraw
-          width="100%"
-          height="100%"
-          onChange={(elements) => {
-            editorRef.current = elements;
-            if (!editorReady) setEditorReady(true);
-          }}
-        />
-      </div>
+      <CanvasWhiteboard
+        onDataChange={(imageData) => {
+          editorRef.current = imageData;
+          if (!editorReady) setEditorReady(true);
+        }}
+      />
 
       <div style={{ position: "absolute", top: 60, left: 14, zIndex: 20, pointerEvents: "none" }}>
         <div style={{ pointerEvents: "auto" }}>

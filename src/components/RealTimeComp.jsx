@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Excalidraw } from '@excalidraw/excalidraw'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import CanvasWhiteboard from './CanvasWhiteboard'
 
 const RT_LOCK_KEY = 'rt_locked_room'
 
@@ -132,12 +132,7 @@ const RealTimeComp = () => {
         </div>
       </div>
 
-      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-        <Excalidraw
-          width="100%"
-          height="100%"
-        />
-      </div>
+      <CanvasWhiteboard />
     </div>
   )
 }
