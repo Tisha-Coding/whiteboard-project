@@ -232,12 +232,12 @@ const CollabComp = () => {
   }, []);
 
   const insertCheckpoint = useCallback(
-    async (elements, title, { silent } = { silent: true }) => {
+    async (imageData, title, { silent } = { silent: true }) => {
       if (!roomIdValue || isCheckpointingRef.current) return;
       isCheckpointingRef.current = true;
       if (!silent) setIsSavingCheckpoint(true);
       try {
-        const snapshot = { elements };
+        const snapshot = { imageData, timestamp: new Date().toISOString() };
         await insertCheckpointService(roomIdValue, snapshot, title);
         setLastCheckpointAt(new Date().toISOString());
         if (!silent) showStatus("success", "Checkpoint saved.");
