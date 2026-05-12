@@ -20,7 +20,7 @@ const TestComp = () => {
       <div style={{ position:'absolute', top:'40%', right:'5%', width:100, height:100, borderRadius:'50%', background:'radial-gradient(circle,rgba(192,38,211,0.06) 0%,transparent 70%)', pointerEvents:'none' }} />
 
       {/* overlay card */}
-      <div style={{ position: 'absolute', top: 60, left: 14, zIndex: 20, pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', top: 60, left: 14, zIndex: 30, pointerEvents: 'none' }}>
 
         {/* spinning border wrapper */}
         <div style={{ position:'relative', borderRadius:20, padding:2, background:'transparent' }}>

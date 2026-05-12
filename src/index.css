@@ -114,3 +114,8 @@ body {
 /* ════════ PULSE DOT ════════ */
 @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(1.9)} }
 .live-dot { animation:pdot 2s ease-in-out infinite; }
+
+/* ════════ EXCALIDRAW ════════ */
+.excalidraw { width: 100% !important; height: 100% !important; }
+.excalidraw.theme--light { --color-primary: #7c3aed; }
+.excalidraw-textEditorContainer { z-index: 10 !important; }
