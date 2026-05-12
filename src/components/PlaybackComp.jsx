@@ -279,8 +279,10 @@ const PlaybackComp = () => {
         </div>
       </div>
 
-      <div style={{ position: 'absolute', inset: 0 }}>
+      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
         <Excalidraw
+          width="100%"
+          height="100%"
           onMount={() => {
             setEditorReady(true)
           }}

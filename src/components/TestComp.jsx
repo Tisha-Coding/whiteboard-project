@@ -97,8 +97,11 @@ const TestComp = () => {
         </div>
       </div>
 
-      <div style={{ position: 'absolute', inset: 0 }} key={resetKey}>
-        <Excalidraw />
+      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} key={resetKey}>
+        <Excalidraw
+          width="100%"
+          height="100%"
+        />
       </div>
     </div>
   )

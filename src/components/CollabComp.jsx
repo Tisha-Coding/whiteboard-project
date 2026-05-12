@@ -428,8 +428,10 @@ const CollabComp = () => {
         </div>
       ) : null}
 
-      <div style={{ position: 'absolute', inset: 0 }}>
+      <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
         <Excalidraw
+          width="100%"
+          height="100%"
           onChange={(elements) => {
             editorRef.current = elements;
             if (!editorReady) setEditorReady(true);
