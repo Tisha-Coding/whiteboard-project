@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import CanvasWhiteboard from './CanvasWhiteboard'
 import { listCheckpoints } from '../utils/whiteboardService'
+import { playbackDrawing } from '../utils/playbackService'
 
 const PB_LOCK_KEY = 'pb_locked_room'
 const MAX_CHECKPOINTS = 200
@@ -281,7 +282,7 @@ const PlaybackComp = () => {
 
       <CanvasWhiteboard
         readOnly={true}
-        initialData={currentCheckpoint?.json}
+        initialData={typeof currentCheckpoint?.json === 'string' ? currentCheckpoint.json : currentCheckpoint?.json?.imageData}
       />
 
       {/* ── Dark cinematic player bar ── */}

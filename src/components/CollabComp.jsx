@@ -6,6 +6,7 @@ import {
   loadLatestWhiteboardSnapshot,
   saveLatestWhiteboardSnapshot,
 } from "../utils/whiteboardService";
+import { initializeCollaboration, broadcastDrawing } from "../utils/collaborationService";
 
 const CHECKPOINT_EVERY_MS = 15000;
 const COLLAB_LOCK_KEY = 'collab_locked_room'
@@ -319,6 +320,21 @@ const CollabComp = () => {
     loadData();
   }, [isRoomIdValid, editorReady, loadData]);
 
+  useEffect(() => {
+    if (!isRoomIdValid) return;
+    const unsubscribe = initializeCollaboration(roomIdValue, (data) => {
+      if (data.imageData && editorRef.current !== data.imageData) {
+        const img = new Image();
+        img.onload = () => {
+          const ctx = document.querySelector('canvas')?.getContext('2d');
+          if (ctx) ctx.drawImage(img, 0, 0);
+        };
+        img.src = data.imageData;
+      }
+    });
+    return unsubscribe;
+  }, [isRoomIdValid, roomIdValue, editorReady]);
+
   if (!isRoomIdValid) {
     return (
       <div style={{ padding: 20 }}>
@@ -432,6 +448,9 @@ const CollabComp = () => {
         onDataChange={(imageData) => {
           editorRef.current = imageData;
           if (!editorReady) setEditorReady(true);
+          if (isRoomIdValid && roomIdValue) {
+            broadcastDrawing(roomIdValue, imageData);
+          }
         }}
       />
 
