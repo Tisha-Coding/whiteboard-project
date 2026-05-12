@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Tldraw } from 'tldraw'
-import 'tldraw/tldraw.css'
 import { Link } from 'react-router-dom'
+import 'tldraw/tldraw.css'
 
 const INITIAL_KEY = 'local-whiteboard'
 
